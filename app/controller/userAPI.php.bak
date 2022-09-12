@@ -1,0 +1,189 @@
+<?php 
+
+
+	$act=$_POST['act'];
+	include("func.php");
+	$dd = date('Y-m-d');
+	if($act=="Register"){
+		//echo "askfkaf";exit;
+	//	txtsname:txtsname,txtoname: txtoname,act: 'Register',txtemail: txtemail,txtpass2: txtpass2,txttel: txttel
+		
+		$txtsname=$_POST['txtsname'];
+		$txtoname=$_POST['txtoname'];
+		$txtemail=$_POST['txtemail'];
+		$txtpass2=$_POST['txtpass2'];
+		$txttel=$_POST['txttel'];
+		$txtpass2=sha1($txtpass2);
+		$refid=$_POST['refid'];
+		
+		
+		$recnum=recNum("select * from tblaccounts where email='$txtemail'");
+		if($recnum>0){
+			
+			echo "xxx";
+			exit;
+		}
+		
+		if($refid==""){
+			$qry="insert into tblaccounts(email,surname,othername,telephone,pword) values ('$txtemail','$txtsname','$txtoname','$txttel','$txtpass2')";
+			$res=mysql_query($qry);
+			echo "1";
+			exit;
+		}
+		
+		$pid=returnQueryValue("select uid from tblrefer where id=$refid","uid");
+		
+		$qry="insert into tblaccounts(email,surname,othername,telephone,pword,parentid) values ('$txtemail','$txtsname','$txtoname','$txttel','$txtpass2',$pid)";
+			$res=mysql_query($qry);
+			echo "1";
+			
+	}
+	
+	if($act=="login"){
+		
+		//username:username,txtpass: txtpass,act: 'login'
+		
+		$username=trim($_POST['username']);
+		$txtpass=$_POST['txtpass'];
+		$txtpass=sha1($txtpass);
+	//	echo "select * from tbadmin where usern='$txtuser' and pword='$txtpword'";exit;
+		$recnum=recNum("select * from tblaccounts where (email='$username' or telephone='$username') and pword='$txtpass'");
+		//echo $recnum;exit;
+		if($recnum>0){
+			$sk=setcookie("xmlnfi", $username, time() + (86400 * 30), "/");
+			
+			echo "1";
+			
+		}else{
+			echo "xxx";
+		}
+		
+		
+		
+	}
+	
+	if($act=="logout"){
+		unset($_COOKIE['curuser']);
+    setcookie('curuser', '', time() - 3600, '/'); // empty value and old timestamp
+	echo "1";
+	}
+	
+	if($act=="addportaladmin"){
+		//act: 'addportaladmin', txtusername: txtusername, txtpass: txtpass,txtsection: txtsection, txtmember: txtmember
+		$txtusername=$_POST['txtusername'];
+		$txtpass=$_POST['txtpass'];
+		$txtemail=$_POST['txtemail'];
+		$txtpass=sha1($txtpass);
+		$txtsection=$_POST['txtsection'];
+		$txtmember=$_POST['txtmember'];
+		$cbopoption=$_POST['cbopoption'];
+		$recnum=recNum("select * from tbadmin where usern='$txtusername'");
+		if($recnum>0){
+			echo "xxx";exit;
+		}
+		if($txtmember==""){}else{
+			$recnummem=recNum("select * from tbadmin where memid=$txtmember");
+			if($recnummem>0){
+				echo "xxx";exit;
+			}
+			
+		}
+		if($txtmember==""){
+			$txtmember="0";
+		}
+		$qry="insert into tbadmin (memid,department,usern,pword,usertype,email,company) values($txtmember,'$txtsection','$txtusername','$txtpass','A','$txtemail','$cbopoption')" ;
+		//echo $qry;exit;
+		$res=mysql_query($qry);
+		echo "1";
+		
+		
+		
+	}
+	
+	//act: 'changepass', txtoldpass: txtoldpass, txtnewpass: txtnewpass
+	
+	if($act=="changepass"){
+		$txtoldpass=$_POST['txtoldpass'];
+		$txtnewpass=$_POST['txtnewpass'];
+		$txtoldpass=sha1($txtoldpass);
+		$txtnewpass=sha1($txtnewpass);
+		$curuser=@$_COOKIE['curuser'];
+		$recnum=recNum("select * from tbadmin where usern='$curuser' and pword='$txtoldpass'");
+		if($recnum<1){
+			echo "notexist";
+			exit;
+		}
+		$res=mysql_query("update tbadmin set pword='$txtnewpass',passreset='Y' where usern='$curuser'");
+		echo "1";
+		
+	}
+	
+	if($act=="acceptinvite"){
+		$txtemail=$_POST['txtemail'];
+		$txttelephone=$_POST['txttelephone'];
+		$txtname=$_POST['txtname'];
+		$refid=$_POST['refid'];
+		$txtpass=$_POST['txtpass'];
+		$txtpass=sha1($txtpass);
+		$sp=explode(" ",$txtname);
+		$sname=$sp[0];
+		$oname=@$sp[1];
+		$uid=returnQueryValue("select uid from tblrefer where id=$refid","uid");
+		echo "update tblrefer toname='$txtname',mobile='$txttelephone',email='$txtemail',resp='Y',responsedate='$dd' WHERE id=$refid";exit;
+		$res=mysql_query("update tblrefer toname='$txtname',mobile='$txttelephone',email='$txtemail',resp='Y',responsedate='$dd' WHERE id=$refid");
+		
+		$res2=mysql_query("insert into tblaccounts(surname,othername,telephone,email,refid,parentid,pword) values('$sname','$oname','$txttelephone','$txtemail',$refid,$uid,'$txtpass')");
+		echo "1";
+		
+	}
+	
+	if($act=="inviteemailtel"){
+		$txtname=@$_POST['txtname'];
+		$txttelephone=@$_POST['txttelephone'];
+		$txtemail=@$_POST['txtemail'];
+		$uid=getuserid();
+		$recnum=recNum("select * from tblrefer where uid=$uid and (email='$txtemail' or mobile='$txttelephone')");
+		if($recnum>0){
+			echo "exists";
+			exit;
+		}
+		
+		$qry="";
+		if (!empty($txttelephone) && !empty($txtemail)){
+			$qry="insert into tblrefer (uid,mobile,email,toname,ref_type,ddate) values($uid,'$txttelephone','$txtemail','$txtname','mobile_email','$dd');";
+			
+			
+		}
+		else{
+			if(!empty($txttelephone)){
+				$qry="insert into tblrefer (uid,mobile,toname,ref_type,ddate) values($uid,'$txttelephone','$txtname','mobile','$dd');";
+			}
+			
+			if(!empty($txtemail)){
+				$qry="insert into tblrefer (uid,email,toname,ref_type,ddate) values($uid,'$txtemail','$txtname','email','$dd');";
+			}
+		}
+		
+		$res=mysql_query($qry);
+		echo "1";
+		
+	}
+	
+	
+	
+	
+		
+		function getuserid(){
+			$xmlnfi=@$_COOKIE['xmlnfi'];
+	//echo $xmlnfi;exit;
+	
+			$rd=mysql_fetch_assoc(mysql_query("select * from tblaccounts where email='$xmlnfi' or telephone='$xmlnfi'"));
+	
+			$uid=$rd['id'];
+			return $uid;
+		
+		}
+
+
+
+?>

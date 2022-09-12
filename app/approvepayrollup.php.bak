@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php include("header.php"); 
+		
+		
+		$logid=@$_GET['logid'];
+		if(empty($logid)){
+			header("location: index.php");
+			exit;
+		}
+		$rd=mysql_fetch_assoc(mysql_query("select * from tblrunlogup where id=$logid"));
+		$mnt=$rd['tmonth'];
+		
+		$tyear=$rd['tyear'];
+		$assignedto=$rd['assignedto'];
+		$approved=$rd['approved'];
+		$mntname=getMonthNameFromNum($mnt);
+		$prollmnth=$mntname.", ".$tyear;
+		$nstaff=returnQueryValue("select count(distinct(empid)) totmember from tblrunlogitemsup where logid=$logid","totmember");
+		$totdebt=returnQueryValue("select sum(amount) tot from tblrunlogitemsup where logid=$logid and creditdebit='D'","tot");
+		$totcredit=returnQueryValue("select sum(amount) tot from tblrunlogitemsup where logid=$logid and creditdebit='C'","tot");
+		
+		$totnet=$totcredit-$totdebt;
+		?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Payroll</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Upfront</li>
+							</ol>
+						</div>
+
+						
+							<div class="col-md-12 col-lg-12">
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title">Approve Upfront</div>
+
+									</div>
+									
+									<div class="card-body">
+									
+									<div class="col-xl-7 col-md-6">
+								<div class="card overflow-hidden" id="divassign">
+									<div class="ribbon ribbon-top-left text-danger"><span class="bg-danger">Draft</span></div>
+									<div class="item-card7-img">
+										<div class="item-card7-imgs">
+											<a href="#"></a>
+											<img src="../assets/images/photos/16.jpg" alt="img" class="cover-image">
+										</div>
+										<div class="item-card7-overlaytext">
+											<a href="payrollviewerup.php?logid=<?php echo $logid; ?>" target='_blank' class="text-white"> <i class="fa fa-search"></i> Preview</a>
+											<h4 class="font-weight-semibold mb-0"><?php echo number_format($totnet,2); ?></h4>
+										</div>
+									</div>
+									<div class="card-body">
+										<div class="item-card7-desc">
+											<div class="item-card7-text">
+												<a href="education.html" class="text-dark"><h4 class="font-weight-semibold">Payroll for <?php echo $prollmnth; ?></h4></a>
+											</div>
+											
+											<p class="mb-0">Approve Payroll Request.</p>
+										</div>
+									</div>
+									<div class="card-body" >
+										<a class="mr-4"><span class="font-weight-bold">Total Staff:</span> <?php echo $nstaff; ?></a>
+										
+										<a class="mr-4 float-right"><span class="font-weight-bold">Total Deduction:</span> <?php echo number_format($totdebt,2); ?></a>
+										<a class="mr-4 float-right"><span class="font-weight-bold">Total Earning:</span> <?php echo number_format($totcredit,2); ?></a><br>
+										<a class="mr-4 float-left"><span class="font-weight-bold">Net Payout:</span> <?php echo number_format($totnet,2); ?></a>
+										
+									</div>
+									<span style="padding-left:25px;">
+									<?php 
+									if($assignedto>0){
+										$approver=returnQueryValue("select fullname from tblusers where id=$assignedto","fullname");
+										echo "Currently assigned: <font style='font-weight:bold;color:#022E64;'>".$approver."</font>";
+									}
+									?>
+									<span>
+							
+									<div class="card-body">
+									<?php 
+									if($approved=="Y"){}else{
+									?>
+										<a href="javascript:saveGrade();" class="btn btn-primary btn-block"><i class="fa fa-check"></i> Approve Payroll</a>
+										
+									<?php } ?>
+									</div>
+								</div>
+							</div>
+									
+									</div>
+								</div>
+							</div>
+						
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+		<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+		<!-- CHARTJS CHART -->
+		<script src="../assets/plugins/chart/Chart.bundle.js"></script>
+		<script src="../assets/plugins/chart/utils.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+		<!-- ECharts Plugin -->
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/js/index1.js"></script>
+		
+		<script src="../assets/plugins/datatable/jquery.dataTables.min.js"></script>
+		<script src="../assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="../assets/js/datatable.js"></script>
+
+		<!-- Select2 js -->
+		<script src="../assets/plugins/select2/select2.full.min.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+		<script type="text/javascript" src="func.js"></script>
+		<script>
+		var logid="<?php echo $logid; ?>";
+		
+			function saveGrade(){
+				
+				
+					$.post("controller/utility.php", {act: 'approverequestup',logid:logid},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								 Tvar("divassign").innerHTML= "<h3 class='card-title' style='font-size:30px;'><i class='fa fa-check fa-lg' style='color:green;'></i> Payroll approved!</h3>";
+								  								   
+								   
+							   }
+
+							});
+							
+							//Terror(errdetails,diva)
+				
+			}
+		
+		
+		</script>
+
+	</body>
+</html>

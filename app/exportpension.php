@@ -1,0 +1,86 @@
+<?php 
+$payid=@$_GET['payid'];
+		$txtfrom=@$_GET['txtfrom'];
+		$txtto=@$_GET['txtto'];
+		
+				
+		$logid=@$_GET['logid'];
+		include("controller/func.php"); 
+			$sitepack=@$_COOKIE['sitepack'];
+$dec=@base64_decode($sitepack);
+	
+	
+	$spt=explode("**--**",$dec);
+	
+	$compid=@$spt[0];
+	$email=@$spt[1];
+	$curaddress=@$spt[2];
+	
+	//$ip_server = $_SERVER['SERVER_ADDR'];
+
+
+$curuserid=returnQueryValue("select id from tblusers where email='$email'","id");
+
+ header('Content-Type: application/vnd.ms-excel');
+							header("Content-Disposition: attachment; filename=\"ALL_pension_".date("Y-m-d H:i:s").".xls\"");
+							header('Pragma: no-cache');
+							header('Expires: 0');
+
+
+$qry="select tblrunlogitems.empid,tblrunlogitems.amount,payitemname from tblrunlogitems,tblpayelement,tblrunlog where tblpayelement.id=pelementid and tblpayelement.crita in ('PENS') and tblrunlog.id=tblrunlogitems.logid and tblrunlog.approved='Y' and 
+										tblrunlogitems.transdate between '$txtfrom' and '$txtto' and tblrunlog.payroll=$payid 
+
+union 
+
+select tblrunlogitemsup.empid,tblrunlogitemsup.amount,payitemname from tblrunlogitemsup,tblpayelement,tblrunlogup where tblpayelement.id=pelementid and tblpayelement.crita in ('PENS') and tblrunlogup.id=tblrunlogitemsup.logid and tblrunlogup.approved='Y' 
+and tblrunlogup.transdate between '$txtfrom' and '$txtto' and tblrunlogup.payroll=$payid order by empid";
+
+echo "	<div class=\"table-responsive\">
+													<table class=\"table table-inbox table-hover\">
+													<thead>
+													<th>
+													Member Name
+													</th>
+													
+													<th>
+													Tax Pay Element
+													</th>
+													
+													<th>
+													Amount
+													</th>
+													</thead>
+														<tbody>";
+										//echo $qry;
+										$res=mysql_query($qry);
+										$nm=mysql_num_rows($res);
+										if($nm<1){
+											echo "No record found";
+										}else{
+											$rd=mysql_fetch_assoc($res);
+											do{
+											$ip=1;
+											$empid=$rd['empid'];
+											$amount=$rd['amount'];
+											$payitemname=$rd['payitemname'];
+											$fullname=returnQueryValue("select fullname from tblemployee where id=$empid","fullname");
+											
+												echo "<tr class=\"unread\">";
+														echo "<td>$fullname</td>";
+														
+														
+														
+														echo "<td>$payitemname</td>";
+														
+														echo "<td>".number_format($amount,2)."</td>";
+														
+														//echo "<td class=\"view-message  text-right\"><a href='$furl'>Download <i class='fa fa-arrow-down'></i></></td>";
+														echo "</tr>";
+														
+														$ip=$ip+1;
+													}
+													while($rd=mysql_fetch_assoc($res));
+													echo "</table>";
+										}
+
+?>

@@ -1,0 +1,731 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.9
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jun 27, 2021 at 09:35 AM
+-- Server version: 5.6.17
+-- PHP Version: 5.3.4
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Database: `blueroll`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loanchat`
+--
+
+CREATE TABLE IF NOT EXISTS `loanchat` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loanid` int(11) NOT NULL,
+  `msg` text NOT NULL,
+  `tfrom` int(11) NOT NULL,
+  `tto` int(11) NOT NULL,
+  `ddate` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `loanchat`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loandoc`
+--
+
+CREATE TABLE IF NOT EXISTS `loandoc` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loanid` int(11) NOT NULL,
+  `filname` varchar(4000) DEFAULT NULL,
+  `ddate` date DEFAULT NULL,
+  `purpose` varchar(3000) DEFAULT NULL,
+  `createdby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `loandoc`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `loantypes`
+--
+
+CREATE TABLE IF NOT EXISTS `loantypes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `duration` int(11) NOT NULL,
+  `intrate` int(11) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `createdby` int(11) NOT NULL,
+  `ddate` date NOT NULL,
+  `datemodified` date DEFAULT NULL,
+  `conditions` text NOT NULL,
+  `maxamount` bigint(20) DEFAULT NULL,
+  `advertise` varchar(1) NOT NULL DEFAULT 'N',
+  `paymentgateway` varchar(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `loantypes`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifi`
+--
+
+CREATE TABLE IF NOT EXISTS `notifi` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `msg` varchar(6000) NOT NULL,
+  `link` varchar(2000) NOT NULL,
+  `ddate` date NOT NULL,
+  `tfrom` int(11) NOT NULL,
+  `tto` int(11) NOT NULL,
+  `tread` varchar(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `notifi`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `paymentlog`
+--
+
+CREATE TABLE IF NOT EXISTS `paymentlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `owner` int(11) DEFAULT NULL,
+  `amount` double(19,7) NOT NULL,
+  `ddate` date NOT NULL,
+  `creditdebit` varchar(1) DEFAULT NULL,
+  `source` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `paymentlog`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `salaryincrement`
+--
+
+CREATE TABLE IF NOT EXISTS `salaryincrement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `compid` int(11) NOT NULL,
+  `grade` int(11) NOT NULL,
+  `pcent` int(11) NOT NULL,
+  `ddate` date NOT NULL,
+  `createdby` int(11) NOT NULL,
+  `status` varchar(1) NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `salaryincrement`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblcompany`
+--
+
+CREATE TABLE IF NOT EXISTS `tblcompany` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `telephone` varchar(20) NOT NULL,
+  `address1` varchar(100) NOT NULL,
+  `address2` varchar(100) DEFAULT NULL,
+  `address3` varchar(100) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `currmachine` varchar(300) DEFAULT NULL,
+  `logostring` varchar(10000) DEFAULT NULL,
+  `loan` varchar(1) NOT NULL DEFAULT 'N',
+  `applink` varchar(3000) DEFAULT NULL,
+  `sendmail` varchar(1) NOT NULL DEFAULT 'N',
+  `planid` int(11) DEFAULT NULL,
+  `nmember` int(11) DEFAULT NULL,
+  `wef` date DEFAULT NULL,
+  `wet` date DEFAULT NULL,
+  `smtp` varchar(5000) DEFAULT NULL,
+  `smtpusername` varchar(100) DEFAULT NULL,
+  `smtppassword` varchar(500) DEFAULT NULL,
+  `smtpport` int(11) DEFAULT NULL,
+  `appurl` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `tblcompany`
+--
+
+INSERT INTO `tblcompany` (`id`, `name`, `telephone`, `address1`, `address2`, `address3`, `email`, `currmachine`, `logostring`, `loan`, `applink`, `sendmail`, `planid`, `nmember`, `wef`, `wet`, `smtp`, `smtpusername`, `smtppassword`, `smtpport`, `appurl`) VALUES
+(1, 'ABC LTD.', '021223134900', 'Plot B2, Ibuza', 'Off Alenjo Close', 'Laos, Portugal', 'chromenet@gmail.com', '', '60D83B4ED7A1E', 'Y', '', 'N', 2, 100000000, '2021-06-24', '2050-07-24', 'localhost', 'merlin', '123456', 21, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbldepartments`
+--
+
+CREATE TABLE IF NOT EXISTS `tbldepartments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `department` varchar(70) NOT NULL,
+  `compid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tbldepartments`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbldocs`
+--
+
+CREATE TABLE IF NOT EXISTS `tbldocs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `logid` bigint(20) NOT NULL,
+  `empid` bigint(20) NOT NULL,
+  `tmonth` int(11) NOT NULL,
+  `tyear` bigint(20) NOT NULL,
+  `tday` int(11) NOT NULL,
+  `pfilename` varchar(400) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `doctype` varchar(20) NOT NULL,
+  `filedetail` varchar(5000) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tbldocs`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblemployee`
+--
+
+CREATE TABLE IF NOT EXISTS `tblemployee` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(100) NOT NULL,
+  `grade` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telephone` varchar(20) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `staffid` varchar(30) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `appid` varchar(30) DEFAULT NULL,
+  `pword` varchar(2000) DEFAULT NULL,
+  `address` varchar(300) DEFAULT NULL,
+  `datecreated` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblemployee`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblemployeegradelog`
+--
+
+CREATE TABLE IF NOT EXISTS `tblemployeegradelog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tfrom` int(11) DEFAULT NULL,
+  `tto` int(11) DEFAULT NULL,
+  `ddate` date DEFAULT NULL,
+  `createdby` int(11) DEFAULT NULL,
+  `empid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblemployeegradelog`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblemployeepayelement`
+--
+
+CREATE TABLE IF NOT EXISTS `tblemployeepayelement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payelement` varchar(200) DEFAULT NULL,
+  `amount` bigint(11) DEFAULT NULL,
+  `crita` varchar(100) NOT NULL,
+  `wef` date NOT NULL,
+  `wet` date NOT NULL,
+  `creditdebit` varchar(1) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `empid` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblemployeepayelement`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblgrades`
+--
+
+CREATE TABLE IF NOT EXISTS `tblgrades` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `gradename` varchar(100) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `createdby` varchar(100) NOT NULL,
+  `basicpay` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblgrades`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblinvites`
+--
+
+CREATE TABLE IF NOT EXISTS `tblinvites` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telephone` varchar(20) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `role` varchar(40) NOT NULL,
+  `inviter` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblinvites`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblloans`
+--
+
+CREATE TABLE IF NOT EXISTS `tblloans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loanid` int(11) NOT NULL,
+  `empid` int(11) NOT NULL,
+  `duration` int(11) NOT NULL,
+  `intrate` int(11) NOT NULL,
+  `principal` double(19,7) NOT NULL,
+  `amount` double(19,7) NOT NULL,
+  `approvedby` int(11) DEFAULT NULL,
+  `ddate` date NOT NULL,
+  `startdate` date DEFAULT NULL,
+  `compid` int(11) NOT NULL,
+  `instalment` double(19,7) NOT NULL,
+  `approved` varchar(1) NOT NULL DEFAULT 'N',
+  `createtype` varchar(1) NOT NULL DEFAULT 'A',
+  `loanno` varchar(20) DEFAULT NULL,
+  `insttype` varchar(15) DEFAULT NULL,
+  `interest` double(19,7) DEFAULT NULL,
+  `createdby` int(11) NOT NULL,
+  `signagreed` varchar(1) NOT NULL DEFAULT 'N',
+  `bank` varchar(100) NOT NULL,
+  `accno` varchar(20) NOT NULL,
+  `accountname` varchar(100) NOT NULL,
+  `topup` varchar(1) NOT NULL DEFAULT 'N',
+  `parentloan` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblloans`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblloanshedule`
+--
+
+CREATE TABLE IF NOT EXISTS `tblloanshedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `loanid` int(11) NOT NULL,
+  `paymentdate` date NOT NULL,
+  `begbalance` double(19,7) NOT NULL,
+  `instamount` double(19,7) NOT NULL,
+  `interest` double(19,7) NOT NULL,
+  `endbalance` double(19,7) NOT NULL,
+  `paid` varchar(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblloanshedule`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpayelement`
+--
+
+CREATE TABLE IF NOT EXISTS `tblpayelement` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payelement` varchar(200) DEFAULT NULL,
+  `amount` bigint(11) DEFAULT NULL,
+  `crita` varchar(100) NOT NULL,
+  `wef` date NOT NULL,
+  `wet` date NOT NULL,
+  `dependson` varchar(100) DEFAULT NULL,
+  `payroll` int(11) NOT NULL,
+  `grade` int(11) NOT NULL,
+  `pct` int(11) NOT NULL,
+  `creditdebit` varchar(1) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `pension` varchar(1) NOT NULL DEFAULT 'N',
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblpayelement`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpayroll`
+--
+
+CREATE TABLE IF NOT EXISTS `tblpayroll` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `createdby` varchar(100) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `freq` varchar(100) NOT NULL,
+  `rundate` date NOT NULL,
+  `modifiedby` int(11) DEFAULT NULL,
+  `modifieddate` date DEFAULT NULL,
+  `ignore_not_one_year` varchar(1) NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblpayroll`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpins`
+--
+
+CREATE TABLE IF NOT EXISTS `tblpins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lnid` int(11) DEFAULT NULL,
+  `pin` varchar(10) DEFAULT NULL,
+  `ddate` date DEFAULT NULL,
+  `used` varchar(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblpins`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblplans`
+--
+
+CREATE TABLE IF NOT EXISTS `tblplans` (
+  `id` int(11) NOT NULL,
+  `mnt` bigint(20) NOT NULL,
+  `tyear` bigint(20) NOT NULL,
+  `nmember` int(11) NOT NULL,
+  `description` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tblplans`
+--
+
+INSERT INTO `tblplans` (`id`, `mnt`, `tyear`, `nmember`, `description`) VALUES
+(1, 0, 0, 10, 'Freemium'),
+(2, 5700, 66000, 100, 'Standard'),
+(3, 8000, 93600, 400, 'Premium'),
+(4, 10000, 110000, 2000, 'Enterprise');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblprorate`
+--
+
+CREATE TABLE IF NOT EXISTS `tblprorate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tmonth` int(11) NOT NULL,
+  `tyear` int(11) NOT NULL,
+  `ndays` int(11) NOT NULL,
+  `empid` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblprorate`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblrunlog`
+--
+
+CREATE TABLE IF NOT EXISTS `tblrunlog` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payroll` int(11) NOT NULL,
+  `tmonth` int(11) NOT NULL,
+  `tyear` bigint(20) NOT NULL,
+  `tday` int(11) NOT NULL,
+  `runby` varchar(100) NOT NULL,
+  `nextrun` date NOT NULL,
+  `approved` varchar(1) NOT NULL DEFAULT 'N',
+  `approvedby` varchar(200) NOT NULL,
+  `assignedto` bigint(20) NOT NULL,
+  `transdate` date NOT NULL,
+  `empid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblrunlog`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblrunlogitems`
+--
+
+CREATE TABLE IF NOT EXISTS `tblrunlogitems` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `logid` bigint(20) NOT NULL,
+  `tday` int(11) NOT NULL,
+  `tmonth` int(11) NOT NULL,
+  `tyear` int(11) NOT NULL,
+  `pelementid` varchar(20) DEFAULT NULL,
+  `creditdebit` varchar(1) NOT NULL,
+  `empid` int(11) NOT NULL,
+  `transdate` date NOT NULL,
+  `amount` bigint(20) NOT NULL,
+  `starget` varchar(1) NOT NULL DEFAULT 'G',
+  `paynarration` varchar(200) NOT NULL,
+  `globalo` varchar(1) NOT NULL DEFAULT 'N',
+  `payitemname` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblrunlogitems`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblrunlogitemsup`
+--
+
+CREATE TABLE IF NOT EXISTS `tblrunlogitemsup` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `logid` bigint(20) NOT NULL,
+  `tday` int(11) NOT NULL,
+  `tmonth` int(11) NOT NULL,
+  `tyear` int(11) NOT NULL,
+  `pelementid` varchar(20) DEFAULT NULL,
+  `creditdebit` varchar(1) NOT NULL,
+  `empid` int(11) NOT NULL,
+  `transdate` date NOT NULL,
+  `amount` bigint(20) NOT NULL,
+  `starget` varchar(1) NOT NULL DEFAULT 'G',
+  `paynarration` varchar(200) NOT NULL,
+  `globalo` varchar(1) NOT NULL DEFAULT 'N',
+  `payitemname` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblrunlogitemsup`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblrunlogup`
+--
+
+CREATE TABLE IF NOT EXISTS `tblrunlogup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payroll` int(11) NOT NULL,
+  `tmonth` int(11) NOT NULL,
+  `tyear` bigint(20) NOT NULL,
+  `tday` int(11) NOT NULL,
+  `runby` varchar(100) NOT NULL,
+  `nextrun` date NOT NULL,
+  `approved` varchar(1) NOT NULL DEFAULT 'N',
+  `approvedby` varchar(200) NOT NULL,
+  `assignedto` bigint(20) NOT NULL,
+  `transdate` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblrunlogup`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblupfront`
+--
+
+CREATE TABLE IF NOT EXISTS `tblupfront` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payid` int(11) NOT NULL,
+  `wef` date NOT NULL,
+  `wet` date NOT NULL,
+  `tyear` bigint(20) NOT NULL,
+  `createdby` int(11) NOT NULL,
+  `approved` varchar(1) NOT NULL DEFAULT 'N',
+  `assignedto` int(11) DEFAULT NULL,
+  `dateapproved` date DEFAULT NULL,
+  `compid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblupfront`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblupfrontitems`
+--
+
+CREATE TABLE IF NOT EXISTS `tblupfrontitems` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `upfrontid` int(11) NOT NULL,
+  `wef` date NOT NULL,
+  `wet` date NOT NULL,
+  `elementid` int(11) NOT NULL,
+  `gradeid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `tblupfrontitems`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblusers`
+--
+
+CREATE TABLE IF NOT EXISTS `tblusers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fullname` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telephone` varchar(20) NOT NULL,
+  `pword` varchar(100) NOT NULL,
+  `compid` int(11) NOT NULL,
+  `active` varchar(1) NOT NULL DEFAULT 'Y',
+  `curmachine` varchar(100) NOT NULL,
+  `role` varchar(40) NOT NULL,
+  `confirmemail` varchar(1) NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+--
+-- Dumping data for table `tblusers`
+--
+
+INSERT INTO `tblusers` (`id`, `fullname`, `email`, `telephone`, `pword`, `compid`, `active`, `curmachine`, `role`, `confirmemail`) VALUES
+(1, 'Ajala Kunle', 'admin@blueroll.com', '08047392993', '7c4a8d09ca3762af61e59520943dc26494f8941b', 1, 'Y', '127.0.0.1', 'admin', 'Y');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `timecard`
+--
+
+CREATE TABLE IF NOT EXISTS `timecard` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tfrom` varchar(10) NOT NULL,
+  `tto` varchar(10) NOT NULL,
+  `empid` int(11) NOT NULL,
+  `ddate` date NOT NULL,
+  `createddate` date NOT NULL,
+  `tothour` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `timecard`
+--
+

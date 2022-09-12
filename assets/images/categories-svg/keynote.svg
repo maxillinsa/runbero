@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve" width="512px" height="512px" class=""><g><path style="fill:#00C3FF" d="M407,512H105C47.103,512,0,464.897,0,407V105C0,47.103,47.103,0,105,0h302  c57.897,0,105,47.103,105,105v302C512,464.897,464.897,512,407,512z" data-original="#00C3FF" class=""/><path style="fill:#00C3FF" d="M407,0H256v512h151c57.897,0,105-47.103,105-105V105C512,47.103,464.897,0,407,0z" data-original="#00AAF0" class="" data-old_color="#00AAF0"/><g>
+	<path style="fill:#FFFFFF;" d="M395.504,266l-6.426-73.898C387.041,168.67,367.769,151,344.248,151H191v-25c0-2.757,2.243-5,5-5h25   v10h60V81h-60v10h-25c-19.299,0-35,15.701-35,35v25.499c-20.365,3.01-36.24,19.458-38.078,40.603L116.496,266H90.248v30h331.504   v-30H395.504z" data-original="#FFFFFF" class=""/>
+	<polygon style="fill:#FFFFFF;" points="271,326 241,326 241,401 186,401 186,431 326,431 326,401 271,401  " data-original="#FFFFFF" class=""/>
+</g><g>
+	<rect x="256" y="81" style="fill:#FFFFFF" width="25" height="50" data-original="#F2F2F2" class="active-path" data-old_color="#ffffff"/>
+	<path style="fill:#FFFFFF" d="M395.504,266l-6.426-73.898C387.041,168.67,367.769,151,344.248,151H256v145h165.752v-30H395.504z" data-original="#F2F2F2" class="active-path" data-old_color="#ffffff"/>
+	<polygon style="fill:#FFFFFF" points="271,326 256,326 256,431 326,431 326,401 271,401  " data-original="#F2F2F2" class="active-path" data-old_color="#ffffff"/>
+</g></g> </svg>

@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php 
+		$id=@$_GET['id'];
+		if(empty($id)){
+			header("location: index.php");
+			exit;
+		}
+		
+		include("header.php"); 
+		$rd=mysql_fetch_assoc(mysql_query("select * from tblpayroll where id=$id"));
+		$name=$rd['name'];
+		$freq=$rd['freq'];
+		$rundate=$rd['rundate'];
+		$active=$rd['active'];
+		
+		
+		?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Payroll</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Payroll Project</li>
+							</ol>
+						</div>
+
+
+							<div class="col-md-8">
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title"><i class="fa fa-edit"></i> Edit Payroll</div>
+									</div>
+									<div class="card-body">
+									<span id="diva"></span>
+										<div class="form-group ">
+										
+											<label class="form-label">Payroll Name</label>
+											<input type="text" class="form-control w-100" id="txtpayroll" value="<?php echo $name; ?>"  placeholder="Enter Payroll Description here">
+										</div>
+										
+									
+										
+											<div class="form-group">
+											<select name="options" id="cbofrequency" class="form-control custom-select">
+												<?php 
+												if($freq=="Hourly"){
+													echo "<option value=\"Hourly\" selected >Hourly</option>";
+												}else{
+													echo "<option value=\"Hourly\">Hourly</option>";
+												}
+												
+													if($freq=="Monthly"){
+													echo "<option value=\"Monthly\" selected >Monthly</option>";
+												}else{
+													echo "<option value=\"Monthly\">Monthly</option>";
+												}
+												
+												if($freq=="Quaterly"){
+													echo "<option value=\"Quaterly\" selected >Quaterly</option>";
+												}else{
+													echo "<option value=\"Quaterly\">Quaterly</option>";
+												}
+												
+												?>
+												
+											</select>
+										</div>
+										
+										
+										<div class="form-group ">
+										
+											<label class="form-label">First Run Date</label>
+											<input class="form-control fc-datepicker" id="txtwef" value="<?php echo $rundate; ?>"  placeholder="MM/DD/YYYY" type="text">
+										</div>
+										
+											<div class="form-group">
+											<label class="form-label">Status</label>
+											<select name="options" id="cbostatus" class="form-control custom-select">
+												<?php 
+												if($active=="Y"){
+													echo "<option value=\"Y\" selected >Active</option>";
+												}else{
+													echo "<option value=\"Y\">Active</option>";
+												}
+												
+													if($active=="N"){
+													echo "<option value=\"N\" selected >Inactive</option>";
+												}else{
+													echo "<option value=\"N\">Inactive</option>";
+												}
+												
+												
+												
+												?>
+												
+											</select>
+										</div>
+										
+								
+									
+									</div>
+									<div class="card-footer">
+										<button type="button" class="btn btn-primary waves-effect waves-light" onclick="saveGrade();"><i class="fa fa-edit"></i> Payroll</button>&nbsp;&nbsp;<a href='payrollproject.php'><button type="button" class="btn btn-red waves-effect waves-light">Cancel</button></a>
+									</div>
+								</div>
+							</div>
+						
+						
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+		<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+		<!-- CHARTJS CHART -->
+		<script src="../assets/plugins/chart/Chart.bundle.js"></script>
+		<script src="../assets/plugins/chart/utils.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+		<!-- ECharts Plugin -->
+		<script src="../assets/plugins/time-picker/jquery.timepicker.js"></script>
+		<script src="../assets/plugins/time-picker/toggles.min.js"></script>
+		<!-- Data tables -->
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		
+	<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/js/index1.js"></script>
+		
+		<script src="../assets/plugins/time-picker/jquery.timepicker.js"></script>
+		<script src="../assets/plugins/time-picker/toggles.min.js"></script>
+		<!-- Data tables -->
+		<script src="../assets/plugins/datatable/jquery.dataTables.min.js"></script>
+		<script src="../assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="../assets/js/datatable.js"></script>
+
+		<!-- Datepicker js -->
+		<script src="../assets/plugins/date-picker/spectrum.js"></script>
+		<script src="../assets/plugins/date-picker/jquery-ui.js"></script>
+		<script src="../assets/plugins/input-mask/jquery.maskedinput.js"></script>
+
+		<!-- Inline js -->
+		<script src="../assets/js/select2.js"></script>
+		<script src="../assets/js/formelements.js"></script>
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+		<script type="text/javascript" src="func.js"></script>
+		
+		<script>
+		var pid="<?php echo $id; ?>";
+			function saveGrade(){
+				//txtpayroll,cbofrequency
+				var txtpayroll=Tvar("txtpayroll").value;
+				var cbofrequency=Tvar("cbofrequency").value;
+				var txtwef=Tvar("txtwef").value;
+				var cbostatus=Tvar("cbostatus").value;
+				
+				if(txtpayroll==""){
+					return
+				}
+				
+				if(txtwef==""){
+					return
+				}
+				
+				
+				
+						$.post("controller/utility.php", {pid:pid,cbostatus:cbostatus,txtwef:txtwef,txtpayroll:txtpayroll,act: 'editpayroll',cbofrequency:cbofrequency},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								  //alert(data);
+								
+								if(data=="exists"){
+									//tError("ERROR: You have already invited contact<br>");
+									Terror("Payroll already exists","diva");
+									return;
+								}
+								   
+								   
+								   if(data=="1"){
+									//Tvar("registerpanel").innerHTML="<div style='font-size:30px;'>Registration Successful.<br><span style='font-size:20px;'>Welcome to FBNInvex!</span><br><br><br><a href='login.php?refid="+refid+"'>Click here to Login</a></div><br><br><br><br><br><br><br><br><br><br>";
+									window.location="payrollproject.php";
+									//return;
+									//alert(data);
+									//tSuccess("Invite sent");
+								}
+								   
+								  								   
+								   
+							   }
+
+							});
+							
+							//Terror(errdetails,diva)
+				
+			}
+		
+		
+		</script>
+
+	</body>
+</html>

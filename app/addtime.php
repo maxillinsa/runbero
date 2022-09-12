@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php 
+		
+		$empid=@$_GET['id'];
+		
+		
+		
+		include("header.php"); ?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Employees</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Member</li>
+							</ol>
+						</div>
+
+						
+							<div class="col-md-12 col-lg-12">
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title">Time Card</div>
+
+									</div>
+									
+									<div class="card-body">
+									<table>
+									<tr>
+										<td>
+										Date <input class="form-control fc-datepicker" id="txtdate" placeholder="MM/DD/YYYY" type="text" style="width:200px;" onchange="getalltime();">
+										</td>
+										
+										<td>
+										Start Time 	<input class="form-control" id="tp2" placeholder="Set time" type="text" onchange="reload();" style="width:100px;">
+										</td>
+										<td>
+										Start Time 	<input class="form-control" id="tpBasic" placeholder="Set time" type="text" onchange="reload();" style="width:100px;">
+										</td>
+										
+										<td>
+										Total Hour Spent 	<input class="form-control" id="txttotal" disabled type="text" style="width:100px;">
+										</td>
+										
+										<td>
+										&nbsp;&nbsp;&nbsp;
+										</td>
+										
+										<td>
+										<button class='btn btn-primary' onclick="savedata();">Add <i class='fa fa-calendar'></i></button> 
+										</td>
+									
+									
+									</tr>
+									</table>
+									
+									<?php 
+										$qry="select * from timecard where empid=$empid order by id desc";
+									//	echo $qry;
+										$res=mysql_query($qry);
+										$nm=mysql_num_rows($res);
+										if($nm<1){
+											echo "No record found";
+										}else{
+											$rd=mysql_fetch_assoc($res);
+											$ip=1;
+											
+										
+										
+											
+									
+									
+									?>
+										<div class="table-responsive" id="divtbl">
+											<table id="example2" class="hover table-bordered border-top-0 border-bottom-0" >
+												<thead>
+													<tr>
+														<th>S/N</th>
+														<th>Day</th>
+														<th>Start Time</th>
+														<th>End Time</th>
+														<th>Hours Worked</th>
+														
+														
+														
+														
+														<th></th>
+														
+													</tr>
+												</thead>
+												<?php 
+													do{
+														
+														
+												?>
+												<tbody>
+													
+													<tr>
+														<td><?php echo $ip; ?></td>
+														<td><?php echo $rd['ddate']; ?></td>
+														<td><?php echo $rd['tfrom']; ?></td>
+														<td><?php echo $rd['tto']; ?></td>
+														<td><?php echo $rd['tothour']; ?></td>
+														
+														
+														
+														
+														
+														
+													<td>
+															<a href='deletetime.php?id=<?php echo $empid; ?>'><button class='btn btn-sm btn-red'>Delete <i class='fa fa-trash'></i></button> </a>
+														</td>
+														
+													</tr>
+												</tbody>
+												<?php 
+												
+												$ip=$ip+1;
+													}
+													while($rd=mysql_fetch_assoc($res));
+										}
+												
+												?>
+												
+											</table>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+		<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+		<!--Select2 js -->
+		<script src="../assets/plugins/select2/select2.full.min.js"></script>
+
+		<!-- Timepicker js -->
+		<script src="../assets/plugins/time-picker/jquery.timepicker.js"></script>
+		<script src="../assets/plugins/time-picker/toggles.min.js"></script>
+		
+		<!-- Data tables -->
+		<script src="../assets/plugins/datatable/jquery.dataTables.min.js"></script>
+		<script src="../assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="../assets/js/datatable.js"></script>
+
+		<!-- Datepicker js -->
+		<script src="../assets/plugins/date-picker/spectrum.js"></script>
+		<script src="../assets/plugins/date-picker/jquery-ui.js"></script>
+		<script src="../assets/plugins/input-mask/jquery.maskedinput.js"></script>
+
+		<!-- Inline js -->
+		<script src="../assets/js/select2.js"></script>
+		<script src="../assets/js/formelements.js"></script>
+
+		<!-- file uploapps js -->
+        <script src="../assets/plugins/fileuploads/js/dropify.js"></script>
+
+		<!--InputMask Js-->
+		<script src="../assets/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+		<script src="../assets/js/apprise-1.5.full.js"></script>
+		<script type="text/javascript" src="func.js"></script>
+		
+		<script>
+		var empid="<?php echo $empid; ?>";
+		function reload(){
+			var tp2=Tvar("tpBasic").value
+			var tpBasic =Tvar("tp2").value
+			var txtdate=Tvar("txtdate").value
+			
+			if(tpBasic==""){
+					//apprise("<font color='red'>ERROR: Please specify dates</font>");
+					return
+				}
+				
+				if(tp2==""){
+					//apprise("<font color='red'>ERROR: Please specify dates</font>");
+					return
+				}
+				//alert(tpBasic);
+				var time = tpBasic;
+			var tarray=tpBasic.split(":");
+		var hrs = tarray[0];
+		var mnts = tarray[1];
+		var format
+		if(tpBasic.search("am")>0){
+			format="am";
+			tpBasic=tarray[0]+":"+tarray[1].replace("am", "")+" AM";
+		}
+		
+		if(tpBasic.search("pm")>0){
+			format="pm";
+			tpBasic=tarray[0]+":"+tarray[1].replace("am", "")+" PM";
+		}
+		
+		
+		var time = tp2;
+			var tarray=tp2.split(":");
+		var hrs = tarray[0];
+		var mnts = tarray[1];
+		var format
+		if(tp2.search("am")>0){
+			format="am";
+			tp2=tarray[0]+":"+tarray[1].replace("am", "")+" AM";
+		}
+		
+		if(tp2.search("pm")>0){
+			format="pm";
+			tp2=tarray[0]+":"+tarray[1].replace("pm", "")+" PM";
+		}
+			
+		
+
+	$.post("controller/utility.php", {tpBasic:tpBasic,act: 'gethour', tp2:tp2},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								// alert(data);	
+									Tvar("txttotal").value=data;
+								   
+							   }
+
+							});
+									
+							
+		}
+		
+		
+		function savedata(){
+			
+			var tp2=Tvar("tp2").value
+			var tpBasic =Tvar("tpBasic").value
+			var txtdate=Tvar("txtdate").value
+			var txttotal=Tvar("txttotal").value
+			
+			if(tpBasic==""){
+					apprise("<font color='red'>ERROR: Please specify Start Time</font>");
+					return
+				}
+				
+				if(tp2==""){
+					apprise("<font color='red'>ERROR: Please specify End time</font>");
+					return
+				}
+				
+				if(txtdate==""){
+					apprise("<font color='red'>ERROR: Please specify Work day</font>");
+					return
+				}
+				
+				if(txttotal==""){
+					apprise("<font color='red'>ERROR: Total hours worked not computed</font>");
+					return
+				}
+				
+				
+				$.post("controller/utility.php", {tpBasic:tpBasic,act: 'savetime', tp2:tp2,txttotal:txttotal,txtdate: txtdate,empid:empid},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								// alert(data);	
+									if(data=="exists"){
+										apprise("<font color='red'>ERROR: Time record has already been saved</font>");
+										return
+									}
+								   
+								  if(data=="1"){
+										apprise("<font color='green'>Success: Time record saved</font>");
+										gs=getalltime();
+										return
+									}
+								   
+								  
+							   }
+
+							});
+				
+			
+		}
+		
+		function getalltime(){
+			var txtdate=Tvar("txtdate").value;
+				$.post("controller/utility.php", {act: 'getalltime',txtdate: txtdate,empid:empid},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								// alert(data);	
+								Tvar("divtbl").innerHTML=data;
+								   
+								  
+								  
+							   }
+
+							});
+			
+		}
+		
+		
+		
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php 
+		$payid=@$_GET['payid'];
+		$mnt=@$_GET['mnt'];
+		$cboyear=@$_GET['cboyear'];
+		
+		if(empty($payid)){
+			header("location: index.php");
+			exit;
+		}
+		
+		if(empty($mnt)){
+			header("location: index.php");
+			exit;
+		}
+		
+		if(empty($cboyear)){
+			header("location: index.php");
+			exit;
+		}
+		
+		include("header.php"); 
+		//echo "select * from tblrunlogup where tyear=$cboyear and payroll=$payid";
+		
+		$res=mysql_query("select * from tblrunlogup where tyear=$cboyear and payroll=$payid");
+		$rnum=mysql_num_rows($res);
+		$perror="";
+		if($rnum<1){
+			$perror= "<span style='color:red'>No record found for the selected parameters</span><br><a href='javascript:history.back();'>Retry</a>";
+			//exit;
+		}
+		
+		?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Payroll</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">
+								Payroll Summary</li>
+							</ol>
+						</div>
+						
+						
+							<div class="col-md-12">
+								<div class="banner-2 card cover-image sptb-2 bg-background2" data-image-src="../assets/images/banners/banner1.jpg">
+									<div class="header-text mb-0">
+										<div class="container">
+										
+											<div class="row">
+												<div class="col-xl-10 col-lg-12 col-md-12 d-block mx-auto">
+													<div class="item-search-tabs">
+														<div class="item-search-menu">
+															<ul class="nav">
+																<li class=""><a href="#tab1" class="active" data-toggle="tab">Upfront Employees Summary</a></li>
+																<li><a href="#tab2" data-toggle="tab">Upfront Pay Elements</a></li>
+																
+																
+															</ul>
+														</div>
+														<div class="tab-content">
+															<div class="tab-pane active" id="tab1">
+																
+								<div class="card">
+									
+									<?php 	
+									
+									if(empty($perror)){}else{
+										echo $perror;
+									}
+									
+									if(empty($perror)){
+										 $crd=mysql_fetch_assoc(mysql_query("select * from tblcompany where id=$compid"));
+						 $cname=$crd['name'];
+						  $address1=$crd['address1'];
+						  $address2=$crd['address2'];
+						  $address3=$crd['address3'];
+						  $email=$crd['email'];
+						  $telephone=$crd['telephone'];
+						  
+						  $qryx="select distinct(tblrunlogitemsup.empid)employee from tblrunlogitemsup,tblrunlogup where tblrunlogitemsup.tyear=$cboyear and payroll=$payid and tblrunlogitemsup.logid=tblrunlogup.id and payroll=$payid";
+						 // echo $qryx;
+						  $resx=mysql_query($qryx);
+						  $nmx=mysql_num_rows($resx);
+						  $rdx=mysql_fetch_assoc($resx);
+						  if($nmx<1){
+							  echo "No record found";
+						  }else{
+						  
+						  
+									
+									
+									
+									?>
+									
+									<div class="table-responsive" id="divres" style="padding-left:4%;">
+									
+									<table class="table table-bordered table-hover text-nowrap">
+									<thead>
+									<th>
+									Employee
+									</th>
+									<th>
+									Total Earning
+									</th>
+									<th>
+									Total Deductions
+									</th>
+									<th>
+									Net Earning
+									</th>
+									</thead></tbody>
+									
+									<?php 
+									do{
+										$empid=$rdx['employee'];
+										$ename=returnQueryValue("select fullname from tblemployee where id=$empid","fullname");
+										$cred=getEmployeeCreditup($empid,$mnt,$cboyear,$payid);
+										$debit=getEmployeeDebitup($empid,$mnt,$cboyear,$payid);
+										$tearning=$cred-$debit;
+										echo "<tr>";
+										echo "<td>".$ename."</td>";
+										echo "<td>".number_format($cred,2)."</td>";
+										echo "<td>".number_format($debit,2)."</td>";
+										echo "<td>".number_format($tearning,2)."</td>";
+										echo "</tr>";
+									}
+									while($rdx=mysql_fetch_assoc($resx));
+									
+						  }
+									?>
+									
+									</tbody></table>
+									
+									</div>
+									
+									
+								</div>
+							
+															</div>
+															<div class="tab-pane" id="tab2">
+															<div class="card">
+									
+									<?php 	
+									
+									
+						  
+						  $qryx="select distinct tblrunlogitemsup.pelementid pelementid, payitemname pitem,creditdebit from tblrunlogitemsup,tblrunlogup where tblrunlogitemsup.tyear=$cboyear and payroll=$payid and tblrunlogitemsup.logid=tblrunlogup.id and payroll=$payid and pelementid not in ('BASIC')";
+						 //echo $qryx;
+						  $resx=mysql_query($qryx);
+						  $nmx=mysql_num_rows($resx);
+						  $rdx=mysql_fetch_assoc($resx);
+						  if($nmx<1){
+							  echo "No record found";
+						  }else{
+						  
+						  
+									
+									
+									
+									?>
+									
+									<div class="table-responsive" id="divres" style="padding-left:4%;">
+									
+									<table class="table table-bordered table-hover text-nowrap">
+									<thead>
+									<th>
+									Pay Item
+									</th>
+									<th>
+									Earned
+									</th>
+									<th>
+									Deducted
+									</th>
+									
+									</thead></tbody>
+									
+									<?php 
+									do{
+										$payelemntid=$rdx['pelementid'];
+										$ename=$rdx['pitem'];
+										$cd=$rdx['creditdebit'];
+										$cred=getPayElementAmtup($payelemntid,$mnt,$cboyear,$payid);
+										//$debit=getEmployeeDebit($empid,$mnt,$cboyear,$payid);
+										$tearning=$cred-$debit;
+										echo "<tr>";
+										echo "<td>".$ename."</td>";
+										if($cd=="C"){
+											echo "<td><span style='color:green;'>".number_format($cred,2)."</span></td>";
+										echo "<td></td>";
+										}else{
+											
+										echo "<td></td>";
+										echo "<td><span style='color:red;'>-".number_format($cred,2)."</span></td>";
+										}
+										
+										
+										echo "</tr>";
+									}
+									while($rdx=mysql_fetch_assoc($resx));
+									
+						  }
+									?>
+									
+									</tbody></table>
+									
+									</div>
+									
+									<?php } ?>
+								</div>
+															</div>
+															</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div><!-- /header-text -->
+								</div>
+							</div>
+					
+
+
+
+							<div class="col-md-12">
+							</div>
+						
+						
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+		<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+		<!-- CHARTJS CHART -->
+		<script src="../assets/plugins/chart/Chart.bundle.js"></script>
+		<script src="../assets/plugins/chart/utils.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+		<!-- ECharts Plugin -->
+	<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/js/index1.js"></script>
+		
+		<script src="../assets/plugins/datatable/jquery.dataTables.min.js"></script>
+		<script src="../assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="../assets/js/datatable.js"></script>
+
+		<script src="../assets/js/index1.js"></script>
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+		<script type="text/javascript" src="func.js"></script>
+		
+		<script>
+		
+			function saveGrade(){
+				//cbopayroll,cbomonth,cboyear
+				var cbopayroll=Tvar("cbopayroll").value;
+				var cbomonth=Tvar("cbomonth").value;
+				var cboyear=Tvar("cboyear").value;
+				
+				if(cbopayroll==""){
+					return
+				}
+				
+				
+				
+				window.location="payrollreportsumarry.php?payid="+cbopayroll+"&mnt="+cbomonth+"&cboyear="+cboyear;
+				
+				
+			}
+			
+			function loadByPayRoll(){
+				
+				var cbopayroll=Tvar("cbopayroll").value;
+				var cbograde=Tvar("cbograde").value;
+				
+				if(cbopayroll==""){
+					return;
+				}
+				
+				if(cbograde==""){
+					
+					
+				}else{
+					if(cbopayroll==""){
+						return;
+					}
+				}
+				
+				$.post("controller/utility.php", {act: 'loadpayelementtable', cbopayroll: cbopayroll,cbograde:cbograde},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								// alert(data);
+								
+								Tvar("divres").innerHTML=data;
+								  								   
+								   
+							   }
+
+							});
+				
+			}
+		
+		
+		</script>
+
+	</body>
+</html>

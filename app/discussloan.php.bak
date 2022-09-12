@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php 
+		$lnid=@$_GET['id'];
+		if(empty($lnid)){
+			header("location: index.php");exit;
+		}
+		
+		include("header.php"); 
+		
+		$rd=mysql_fetch_assoc(mysql_query("select * from tblloans where id=$lnid"));
+		
+		
+											$lntid=$rd['loanid'];
+											$loantype=returnQueryValue("select name from loantypes where id=$lntid","name");
+		$lname=$loantype;
+		$amount=$rd['amount'];
+		$loanowner=returnQueryValue("select createdby from loantypes where id=$lntid","createdby");
+		$empid=$rd['empid'];
+		$lnemail=returnQueryValue("select email from tblemployee where id=$empid","email");
+		$lngetter=returnQueryValue("select id from tblusers where email='$lnemail'","id");
+		
+		
+		
+		?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Loan Engagement</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Discuss</li>
+							</ol>
+						</div>
+
+
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card">
+								
+									
+								
+									<div class="card-body p-6">
+									<div style=""><?php echo "<b>".$lname."</b><br><b>Amount: </b>".number_format($amount,2); ?></div>
+										<div id="demo">
+											<div class="vertical-align">
+												<div class="p-0">
+													<div class="row">
+														<div class="col-sm-6">
+															<div style="border: 1px solid black;padding:5px;">
+																<div id="chat" class="conv-form-wrapper">
+																	<div style="height:300px;overflow:auto;" id="divmsg">
+																	
+																	<?php 
+																		$qrs="select * from loanchat where loanid=$lnid";
+																		$rs=mysql_query($qrs);
+																		$nms=mysql_num_rows($rs);
+																		if($nms>0){
+																			$rds=mysql_fetch_assoc($rs);
+																			do{
+																				$tto=$rds['tto'];
+																				$tfrom=$rds['tfrom'];
+																				$ddate=$rds['ddate'];
+																				$msg=stripslashes($rds['msg']);
+																				
+																				$sfrom=returnQueryValue("select fullname from tblusers where id=$tfrom","fullname");
+																				$sto=returnQueryValue("select fullname from tblusers where id=$tto","fullname");
+																				if($curuserid==$tfrom){
+																					echo "<div style='background: rgb(237, 240, 245);padding: 12px 22px;font-size: 0.905rem;display: inline-block;
+																					padding: 9px 9px 6px;border-radius: 20px;border-top-right-radius: 0px;
+																					margin-bottom: 5px;float: right;clear: both;max-width: 65%;word-wrap: break-word;border:1px solid #009900'><font style='font-size:11px;'><b>$sfrom</b></font><br>".$msg."<br><font style='font-size:9px;'>$ddate</font></div>";
+																				}else{
+																						echo "<div style='background: rgb(237, 240, 245);padding: 12px 22px;font-size: 0.905rem;
+																						display: inline-block;padding: 9px 9px 6px;border-radius: 20px;
+																						border-top-left-radius:0px;margin-bottom: 5px;float: left;clear: both;max-width: 65%;word-wrap: break-word;border:1px solid #009900'><font style='font-size:11px;'><b>$sfrom</b></font><br>".$msg."<br><font style='font-size:9px;'>$ddate</font></div>";
+																				}
+																				
+																			}
+																			while($rds=mysql_fetch_assoc($rs));
+																		}
+																	
+																	?>
+																	
+																	</div>
+																	<div>
+																			<div>
+																		<textarea class="form-control" id="txtmsg" onkeypress="handle(event)" name="example-textarea-input" rows="2" placeholder="Type your message here and press enter"></textarea>
+																			
+																			<center><button type="button" class="btn btn-primary waves-effect waves-light" onclick="saveGrade();">Save Update</button></center>
+																			</div>
+																		
+																	</div>
+																</div>
+															</div>
+														</div>
+														
+														<div class="col-sm-6">
+														<?php 
+										$qry="select * from loandoc where loanid=$lnid order by id desc";
+									//	echo $qry;
+										$res=mysql_query($qry);
+										$nm=mysql_num_rows($res);
+										if($nm<1){
+											echo "No record found";
+										}else{
+											$rd=mysql_fetch_assoc($res);
+											do{
+											$ip=1;
+											$ido=$rd['id'];
+											$createdby=$rd['createdby'];
+											$furl="loandoc/".$rd['filname'];
+											//echo "select payroll from tblrunlog where id=$ido";
+									
+									
+									?>
+									
+									<div class="table-responsive">
+													<table class="table table-inbox table-hover">
+														<tbody>
+														<?php 
+														echo "<tr class=\"unread\">";
+														echo "<td class=\"inbox-small-cells\"><i class=\"fa fa-file-text-o inbox-started\"></i></td>";
+														
+														echo "<td class=\"view-message  dont-show\">".$rd['purpose']."</td>";
+														$cname=returnQueryValue("select fullname from tblusers where id=$createdby","fullname");
+														echo "<td class=\"view-message  dont-show\" style='font-size:10px;'>Uploaded by: $cname</td>";
+														
+														
+														
+														echo "<td class=\"view-message  text-right\"><a href='$furl'>Download</td>";
+														echo "</tr>";
+														?>
+														
+															
+													
+													</table>
+													
+													<?php 
+												
+												$ip=$ip+1;
+													}
+													while($rd=mysql_fetch_assoc($res));
+										}
+											
+												?>
+
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+				<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+
+		<!-- Chat js -->
+		<script src="../assets/plugins/chat/jquery.convform.js"></script>
+		<script src="../assets/plugins/chat/autosize.min.js"></script>
+		<script src="../assets/js/chat.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+		<script type="text/javascript" src="func.js"></script>
+		
+		<script>
+		var loanowner="<?php echo $loanowner; ?>";
+		var lnid="<?php echo $lnid; ?>";
+		var lngetter="<?php echo $lngetter; ?>";
+		
+			
+		
+			function saveGrade(){
+				//txttype,txtduration,txtinterest
+				var txttype=Tvar("txttype").value;
+				var txtduration=Tvar("txtduration").value;
+				var txtinterest=Tvar("txtinterest").value;
+				var txtadvert=Tvar("txtadvert").value;
+				var txtmax=Tvar("txtmax").value;
+				//alert(txtadvert);return;
+				
+				if(txttype==""){
+					return
+				}
+				
+				if(txtduration==""){
+					return
+				}
+				if(txtduration=="0"){
+					return
+				}
+				
+				if(txtinterest==""){
+					return
+				}
+				
+				
+				
+						$.post("controller/utility.php", {txttype:txttype,act: 'editloantype',txtduration: txtduration,txtinterest: txtinterest,ltid: ltid,txtadvert: txtadvert, txtmax:txtmax},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								 //alert(data);
+								
+							
+								   
+								   
+								   if(data=="1"){
+									//Tvar("registerpanel").innerHTML="<div style='font-size:30px;'>Registration Successful.<br><span style='font-size:20px;'>Welcome to FBNInvex!</span><br><br><br><a href='login.php?refid="+refid+"'>Click here to Login</a></div><br><br><br><br><br><br><br><br><br><br>";
+									window.location="loantypes.php";
+									//return;
+									//alert(data);
+									//tSuccess("Invite sent");
+								}
+								   
+								  								   
+								   
+							   }
+
+							});
+							
+							//Terror(errdetails,diva)
+				
+			}
+		
+		
+		function handle(e){
+        if(e.keyCode === 13){
+            e.preventDefault(); // Ensure it is only this code that runs
+
+           // alert("Enter was pressed was presses");
+			sendMessage();
+        }
+    }
+	
+	
+	function sendMessage(){
+		var txtmsg=Tvar("txtmsg").value;
+		if(txtmsg==""){
+			return;
+		}
+		
+		Tvar("divmsg").innerHTML+="<div style='background: rgb(237, 240, 245);padding: 12px 22px;font-size: 0.905rem;display: inline-block;padding: 10px 15px 8px;border-radius: 20px;border-top-right-radius: 0px;margin-bottom: 5px;float: right;clear: both;max-width: 65%;word-wrap: break-word;border:1px solid #009900;'>"+txtmsg+"</div>";
+		
+		$.post("controller/utility.php", {lngetter:lngetter,txtmsg:txtmsg,act: 'savechat', loanowner: loanowner,lnid:lnid},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								 //alert(data);
+								Tvar("txtmsg").value="";
+							
+								   
+								  								   
+								   
+							   }
+
+							});
+	}
+	var myVar;
+	function loadchat(){
+				
+		//Tvar("divmsg").innerHTML+="<div style='background: rgb(237, 240, 245);padding: 12px 22px;font-size: 0.905rem;display: inline-block;padding: 10px 15px 8px;border-radius: 20px;border-top-right-radius: 0px;margin-bottom: 5px;float: right;clear: both;max-width: 65%;word-wrap: break-word;border:1px solid #009900;'>"+txtmsg+"</div>";
+		clearInterval(myVar);
+		$.post("controller/utility.php", {lnid:lnid,act: 'loadchat'},
+						   function (data) {
+
+							   if (data.length > 0) {
+								   
+								 //alert(data);
+								Tvar("divmsg").innerHTML=data;
+							
+								   myVar = setInterval(loadchat, 3000);
+								  								   
+								   
+							   }
+
+							});
+	}
+	
+	myVar = setInterval(loadchat, 3000);
+	
+	window.setInterval(function() {
+  var elem = document.getElementById('divmsg');
+  elem.scrollTop = elem.scrollHeight;
+}, 1000);
+	
+		</script>
+
+	</body>
+</html>

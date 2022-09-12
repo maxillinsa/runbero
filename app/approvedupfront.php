@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+	<head>
+		<?php include("header.php"); ?>
+
+				<div class="app-content  my-3 my-md-5">
+					<div class="side-app">
+						<div class="page-header">
+							<h4 class="page-title">Payroll</h4>
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Payslips</li>
+							</ol>
+						</div>
+
+						
+							<div class="col-md-12 col-lg-12">
+								<div class="card">
+									<div class="card-header">
+										<div class="card-title">Approved Upfronts</div>
+
+									</div>
+									
+									<div class="card-body">
+								
+									
+									
+									
+												
+											
+											<?php 
+										$qry="select distinct logid from tblrunlogitemsup,tblrunlogup,tblpayroll where tblpayroll.compid=$compid and tblrunlogitemsup.logid=tblrunlogup.id and approved='Y' AND payroll=tblpayroll.id";
+									//	echo $qry;
+										$res=mysql_query($qry);
+										$nm=mysql_num_rows($res);
+										if($nm<1){
+											echo "No record found";
+										}else{
+											$rd=mysql_fetch_assoc($res);
+											do{
+											$ip=1;
+											$ido=$rd['logid'];
+											
+											//echo "select payroll from tblrunlog where id=$ido";
+									
+									
+									?>
+									
+									<div class="table-responsive">
+													<table class="table table-inbox table-hover">
+														<tbody>
+														<?php 
+														echo "<tr class=\"unread\">";
+														echo "<td class=\"inbox-small-cells\"><i class=\"fa fa-star inbox-started\"></i></td>";
+														$payid=returnQueryValue("select payroll from tblrunlogup where id=$ido","payroll");
+														$payrollname=returnQueryValue("select name from tblpayroll where id=$payid","name");
+														echo "<td class=\"view-message  dont-show\">$payrollname</td>";
+														$mnt=returnQueryValue("select tmonth from tblrunlogup where id=$ido","tmonth");
+														$mntname=getMonthNameFromNum($mnt);
+														$tyr=returnQueryValue("select tyear from tblrunlogup where id=$ido","tyear");
+														echo "<td class=\"view-message \"><strong>$mntname</strong> $tyr</td>";
+														echo "<td class=\"view-message  inbox-small-cells\"><a href='viewapprovedupfront.php?pid=$ido' target='_blank'><i class=\"fa fa-paperclip\" style='font-size:30px;'></i></a></td>";
+														$approved=returnQueryValue("select approved from tblrunlogup where id=$ido","approved");
+														if($approved=="Y"){
+															$approved="Approved";
+															
+														}else{
+																$approved="Draft";
+														}
+														echo "<td class=\"view-message  text-right\">$approved</td>";
+														echo "</tr>";
+														?>
+														
+															
+													
+													</table>
+													
+													<?php 
+												
+												$ip=$ip+1;
+													}
+													while($rd=mysql_fetch_assoc($res));
+										}
+											
+												?>
+
+												</div>
+												
+										</div>
+									</div>
+								</div>
+							</div>
+						
+					
+					</div>
+				</div>
+			</div>
+
+			<!--footer-->
+		<?php include("footer.php"); ?>
+			<!-- End Footer-->
+		</div>
+
+		<!-- Back to top -->
+		<a href="#top" id="back-to-top" ><i class="fa fa-rocket"></i></a>
+
+
+		<!-- Dashboard Core -->
+		<script src="../assets/js/vendors/jquery-3.2.1.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/popper.min.js"></script>
+		<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../assets/js/vendors/jquery.sparkline.min.js"></script>
+		<script src="../assets/js/vendors/selectize.min.js"></script>
+		<script src="../assets/js/vendors/jquery.tablesorter.min.js"></script>
+		<script src="../assets/js/vendors/circle-progress.min.js"></script>
+		<script src="../assets/plugins/rating/jquery.rating-stars.js"></script>
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Fullside-menu Js-->
+		<script src="../assets/plugins/toggle-sidebar/sidemenu.js"></script>
+
+		<!-- CHARTJS CHART -->
+		<script src="../assets/plugins/chart/Chart.bundle.js"></script>
+		<script src="../assets/plugins/chart/utils.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+		<!-- ECharts Plugin -->
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/plugins/echarts/echarts.js"></script>
+		<script src="../assets/js/index1.js"></script>
+		
+		<script src="../assets/plugins/datatable/jquery.dataTables.min.js"></script>
+		<script src="../assets/plugins/datatable/dataTables.bootstrap4.min.js"></script>
+		<script src="../assets/js/datatable.js"></script>
+
+		<!-- Select2 js -->
+		<script src="../assets/plugins/select2/select2.full.min.js"></script>
+
+		<!-- Custom scroll bar Js-->
+		<script src="../assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
+		<!--Counters -->
+		<script src="../assets/plugins/counters/counterup.min.js"></script>
+		<script src="../assets/plugins/counters/waypoints.min.js"></script>
+
+		<!-- Custom Js-->
+		<script src="../assets/js/admin-custom.js"></script>
+
+	</body>
+</html>
